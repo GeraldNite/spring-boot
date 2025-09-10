@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -9,10 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.example.demo.entities.Product;
 import com.example.demo.repository.ProductRepository;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 
@@ -24,8 +27,10 @@ public class ProductController {
     private final ProductRepository productRepository;
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        return ResponseEntity.ok(productRepository.save(product));
+    public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product, UriComponentsBuilder uriBuilder) {
+        Product productSave = productRepository.save(product);
+        URI location = uriBuilder.path("/products/{id}").buildAndExpand(productSave.getId()).toUri();
+        return ResponseEntity.created(location).body(productSave);
     }
 
     @GetMapping
