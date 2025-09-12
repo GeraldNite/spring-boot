@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -36,6 +38,8 @@ public class Product {
     private double price;
 
     @NotNull(message = "Category is required")
-    private Integer categoryId;
+    @JoinColumn(name = "category_id")
+    @ManyToOne
+    private Category category;
 
 }
