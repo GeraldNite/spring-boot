@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterUserRequest;
 import com.example.demo.entities.User;
 import com.example.demo.repository.UserRepository;
@@ -44,6 +42,7 @@ public class UserController {
 
         User user = new User();
         user.setEmail(request.getEmail());
+        user.setName(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         userRepository.save(user);
@@ -72,18 +71,6 @@ public class UserController {
         return ResponseEntity.status(426).body(Map.of("message","User get custom message"));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request) {
-        var user = userRepository.findByEmail(request.getEmail()).orElse(null);
-        
-        if(user == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return ResponseEntity.ok().build();
-    } 
+ 
     
 }
