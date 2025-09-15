@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.JwtResponse;
 import com.example.demo.dto.LoginRequest;
+import com.example.demo.service.JwtService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,24 +25,18 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
+    private final JwtService jwtService;
+
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request) {
-        // var user = userRepository.findByEmail(request.getEmail()).orElse(null);
-        
-        // if(user == null){
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        // }
-
-        // if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        // }
-
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
                  request.getPassword())
         );
-        return ResponseEntity.ok().build();
+
+        var token = jwtService.generateToken(request.getEmail());
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
