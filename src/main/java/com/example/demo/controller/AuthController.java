@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +27,13 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     private final JwtService jwtService;
+
+    @PostMapping("/validate")
+    public boolean validate(@RequestHeader("Authorization") String authHearder) {
+        var token = authHearder.replace("Bearer ", "");
+        return jwtService.validateToken(token);
+    }
+    
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest request) {

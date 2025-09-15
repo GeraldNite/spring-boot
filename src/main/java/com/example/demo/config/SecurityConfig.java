@@ -54,7 +54,8 @@ public class SecurityConfig {
             // .anyRequest().permitAll()
             .requestMatchers("/carts/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
-            .requestMatchers("/auth/**").permitAll()
+            .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
+            .requestMatchers(HttpMethod.POST,"/auth/validate").permitAll()
             .anyRequest().authenticated()
             );
         return http.build();
