@@ -15,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.demo.filter.JwtAuthenticationFilter;
 
 import lombok.AllArgsConstructor;
 
@@ -22,6 +25,8 @@ import lombok.AllArgsConstructor;
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private final UserDetailsService userDetailsService;
 
@@ -57,7 +62,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST,"/auth/validate").permitAll()
             .anyRequest().authenticated()
-            );
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
