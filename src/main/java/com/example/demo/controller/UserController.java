@@ -44,7 +44,8 @@ public class UserController {
         User user = new User();
         user.setEmail(request.getEmail());
         user.setName(request.getName());
-        user.setRole(Role.USER);
+        Role userRole = Role.valueOf(request.getRole().toUpperCase());
+        user.setRole(userRole);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         userRepository.save(user);
