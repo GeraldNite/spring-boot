@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.example.demo.dto.RegisterUserRequest;
+import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
 import com.example.demo.repository.UserRepository;
 
@@ -43,6 +44,7 @@ public class UserController {
         User user = new User();
         user.setEmail(request.getEmail());
         user.setName(request.getName());
+        user.setRole(Role.USER);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         userRepository.save(user);
